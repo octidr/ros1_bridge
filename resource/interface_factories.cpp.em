@@ -294,27 +294,27 @@ void ServiceFactory<
   @(service["ros2_package"])::srv::@(service["ros2_name"])
 >::translate_@(frm)_to_@(to)(
 @[      if frm == "1"]@
-  const @(service["ros1_package"])::@(service["ros1_name"])::@(type)& req1,
-  @(service["ros2_package"])::srv::@(service["ros2_name"])::@(type)& req2
+  const @(service["ros1_package"])::@(service["ros1_name"])::@(type)& __req1,
+  @(service["ros2_package"])::srv::@(service["ros2_name"])::@(type)& __req2
 @[      else]@
-  const @(service["ros2_package"])::srv::@(service["ros2_name"])::@(type)& req2,
-  @(service["ros1_package"])::@(service["ros1_name"])::@(type)& req1
+  const @(service["ros2_package"])::srv::@(service["ros2_name"])::@(type)& __req2,
+  @(service["ros1_package"])::@(service["ros1_name"])::@(type)& __req1
 @[      end if]@
 ) {
 @[      for field in service["fields"][type.lower()]]@
 @[        if field["array"]]@
-  req@(to).@(field["ros" + to]["name"]).resize(req@(frm).@(field["ros" + frm]["name"]).size());
-  auto @(field["ros1"]["name"])1_it = req1.@(field["ros1"]["name"]).begin();
-  auto @(field["ros2"]["name"])2_it = req2.@(field["ros2"]["name"]).begin();
+  __req@(to).@(field["ros" + to]["name"]).resize(__req@(frm).@(field["ros" + frm]["name"]).size());
+  auto @(field["ros1"]["name"])1_it = __req1.@(field["ros1"]["name"]).begin();
+  auto @(field["ros2"]["name"])2_it = __req2.@(field["ros2"]["name"]).begin();
   while (
-    @(field["ros1"]["name"])1_it != req1.@(field["ros1"]["name"]).end() &&
-    @(field["ros2"]["name"])2_it != req2.@(field["ros2"]["name"]).end()
+    @(field["ros1"]["name"])1_it != __req1.@(field["ros1"]["name"]).end() &&
+    @(field["ros2"]["name"])2_it != __req2.@(field["ros2"]["name"]).end()
   ) {
     auto & @(field["ros1"]["name"])1 = *(@(field["ros1"]["name"])1_it++);
     auto & @(field["ros2"]["name"])2 = *(@(field["ros2"]["name"])2_it++);
 @[      else]@
-  auto & @(field["ros1"]["name"])1 = req1.@(field["ros1"]["name"]);
-  auto & @(field["ros2"]["name"])2 = req2.@(field["ros2"]["name"]);
+  auto & @(field["ros1"]["name"])1 = __req1.@(field["ros1"]["name"]);
+  auto & @(field["ros2"]["name"])2 = __req2.@(field["ros2"]["name"]);
 @[        end if]@
 @[        if field["basic"]]@
   @(field["ros2"]["name"])@(to) = @(field["ros1"]["name"])@(frm);
